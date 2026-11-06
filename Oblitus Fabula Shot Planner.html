@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oblitus Fabula — Shot Planning Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#0d0c0b;--pn:#171513;--pn2:#201d1a;--ln:#332f2a;--tx:#e9e3d8;--mu:#9a9183;--ac:#c8963e;--ok:#5fa777;--bad:#c8553e;--bl:#6b8fb5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 Georgia,"Times New Roman",serif}
+h1,h2,h3,button,label,input,select,textarea,.mono{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:16px 20px;border-bottom:1px solid var(--ln);display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+header h1{margin:0;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac)}
+header span{color:var(--mu);font-size:13px}
+.wrap{display:grid;grid-template-columns:340px 1fr;gap:16px;padding:16px;max-width:1500px;margin:auto}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.pn{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:14px;margin-bottom:14px}
+.pn h2{margin:0 0 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac)}
+label{display:block;font-size:11px;color:var(--mu);margin:8px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+input,select,textarea{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:5px;padding:7px 8px;font-size:13px}
+textarea{resize:vertical;min-height:60px;line-height:1.4}
+input:focus,select:focus,textarea:focus{outline:1px solid var(--ac)}
+.row{display:flex;gap:8px}.row>*{flex:1}
+button{background:var(--pn2);color:var(--tx);border:1px solid var(--ln);border-radius:5px;padding:7px 11px;font-size:12px;cursor:pointer}
+button:hover{border-color:var(--ac)}button.p{background:var(--ac);color:#17110a;border-color:var(--ac);font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+.stat{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.stat div{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:8px 14px;flex:1;min-width:110px}
+.stat b{display:block;font:600 20px system-ui;color:var(--ac)}.stat small{color:var(--mu);font:11px system-ui;text-transform:uppercase}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.bar>*{width:auto;flex:1;min-width:130px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card h3{margin:0 0 6px;font-size:15px;color:var(--ac)}.card.done{border-color:var(--ok)}
+.msg{font:12px system-ui;color:var(--ok);min-height:16px;margin-top:4px}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:8px;overflow:hidden}
+.card.approved{border-color:var(--ok)}.card.needs{border-color:var(--bad)}
+.ch{display:flex;justify-content:space-between;padding:8px 12px;background:var(--pn2);font:12px system-ui}
+.ch b{color:var(--ac)}.tag{padding:1px 7px;border-radius:9px;border:1px solid var(--ln);color:var(--mu);font-size:11px}
+.img{aspect-ratio:16/9;background:#000 center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--mu);font:12px system-ui;text-align:center;padding:10px}
+.cb{padding:10px 12px}.nar{font-style:italic;color:#d8cfbf;margin:0 0 8px}
+details{margin:6px 0}summary{cursor:pointer;color:var(--mu);font:12px system-ui}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.note{font:12px system-ui;color:var(--mu);margin-top:6px}.warn{color:var(--bad)}
+.chr{display:flex;gap:8px;align-items:flex-start;border-top:1px solid var(--ln);padding-top:8px;margin-top:8px}
+.chr .av{width:54px;height:54px;border-radius:6px;background:#000 center/cover;flex:none;border:1px solid var(--ln)}
+#modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:9;padding:20px}
+#modal .box{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:14px;width:min(900px,100%)}
+#modal textarea{height:55vh;font-family:ui-monospace,monospace;font-size:12px}
+</style></head><body>
+<header><h1>Oblitus Fabula</h1><span>Documentary shot-planning studio</span></header>
+<div class="wrap">
+<aside>
+ <div class="pn"><h2>1 · Project &amp; script</h2>
+  <label>Project title</label><input data-p="title" placeholder="e.g. Nongoloza Mavela">
+  <div class="row"><div><label>Voice-over length (MM:SS)</label><input data-p="dur" placeholder="08:30"></div>
+  <div><label>Max sec / image</label><input data-p="max" type="number" min="1" step="1"></div></div>
+  <label>Era / decade</label><input data-p="era" placeholder="e.g. 1890s">
+  <label>Main location</label><input data-p="loc" placeholder="e.g. Johannesburg, South Africa">
+  <label>Style preset</label><select data-p="preset"><option value="2d">2D animation (recommended)</option><option value="photo">Photorealistic archival-noir</option></select>
+  <label>Visual style (editable)</label><textarea data-p="style" rows="3"></textarea>
+  <label>Narration script</label><textarea data-p="script" rows="10" placeholder="Paste the complete narration here…"></textarea>
+  <div class="note" id="calc"></div>
+  <div class="acts"><button class="p" id="gen">Build storyboard</button><button id="demo">Sample</button></div>
+  <div class="note">Rebuilding replaces the shot list. Prompts are assembled from the fields on each card; edit any of them freely.</div>
+ </div>
+ <div class="pn"><h2>2 · Character library</h2><div id="chars"></div>
+  <div class="acts"><button id="addc">+ Add character</button></div>
+  <div class="note">Names found in a shot’s narration are linked automatically. Upload a portrait to keep your own reference beside the description.</div>
+ </div>
+ <div class="pn"><h2>3 · Claude planning</h2>
+ <div class="acts"><button id="plan" class="p">Plan shots with Claude</button><button id="allp">Copy all shots</button></div>
+ <div style="height:6px;background:var(--bg);border-radius:4px;margin-top:10px"><div id="pbar" style="height:6px;width:0;background:var(--ac);border-radius:4px"></div></div>
+ <div class="note" id="pmsg"></div>
+ <div class="note">Optional: Claude fills in each shot’s scene details from the narration. Then copy the shots one at a time into your image AI.</div>
+ </div>
+</aside>
+<main>
+ <div class="pn"><h2>Briefing prompt — send this to your image AI first</h2>
+  <textarea data-p="master" rows="8"></textarea>
+  <div class="acts"><button id="mcp" class="p">Copy briefing</button><button id="mrs">Reset</button><span class="note" id="mm"></span></div>
+  <div class="note">Paste this once, then paste each shot below. It updates from your era, location and style until you edit it yourself.</div></div>
+ <div class="stat" id="stat"></div>
+ <div class="bar"><input id="q" placeholder="Search shot #, text, scene…"><select id="fs"></select><select id="fc"></select>
+  <button id="csv">Export CSV</button><button id="doc" class="p">Prompt document</button></div>
+ <div class="cards" id="cards"></div>
+</main></div>
+<div id="modal"><div class="box"><div class="acts" style="margin:0 0 8px"><button id="mcopy" class="p">Copy</button><button id="mdl">Download</button><button id="mx">Close</button><span class="note" id="mn"></span></div><textarea id="mt" readonly></textarea></div></div>
+<script>
+const ST=["not generated","generated","approved","needs revision"],CF=["verified fact","reasonable reconstruction","symbolic illustration"];
+const CAMS=[["Wide establishing shot, eye level, 24mm lens feel, deep composition","soft overcast daylight, muted haze"],["Medium shot, slight low angle, 35mm lens feel, rule-of-thirds","low-key window light, long shadows"],["Close-up on a telling detail, shallow depth of field, 85mm lens feel","single warm practical light, dark surroundings"],["Over-the-shoulder medium shot, 50mm lens feel","dusk light, cool shadows, warm highlights"],["High-angle wide shot, 28mm lens feel, symmetrical framing","pale morning fog, diffused light"],["Profile medium close-up, 50mm lens feel, negative space","chiaroscuro, candle or lamp glow"],["Top-down shot of worn period documents, photographs and objects on a desk, any text illegible, 35mm lens feel","single overhead lamp, dust in the air"],["Atmospheric establishing shot of the location, layered depth, 24mm lens feel, room for a slow pan","fog or haze, low sun, long shadows"]];
+const HOOK=[["Extreme close-up on a telling detail (eyes, hands, an object or a document), very shallow depth of field, 85mm lens feel","single hard side light, deep black shadows, high contrast"],["Wide shot of a lone silhouetted figure, backlit, ominous negative space, 28mm lens feel","backlight through haze, near-black foreground, cold glow"],["Low-angle medium shot, subject half in shadow, 35mm lens feel, tension in the frame","low-key light from one window or lamp, cold blue shadows, warm highlight"],["Tight over-the-shoulder shot toward a threatening or mysterious scene, 50mm lens feel","dim practical light, deep shadows, drifting smoke or dust"],["Centred symmetrical shot of a looming building or empty street, 24mm lens feel, strong leading lines","pre-dawn blue light, thin fog, one lit window"]];
+const NEG="cartoon, illustration look, fantasy glow, modern objects, anachronistic clothing or uniforms, text, captions, watermark, logo, flat even lighting, bright cheerful colours, over-saturated colours, studio look, plastic skin, glamour retouching, beautified or modernised faces, extra fingers, distorted anatomy, deformed face, excessive gore";
+const DS="Photorealistic cinematic historical documentary still styled like a restored period photograph brought to life: low-key chiaroscuro lighting with deep shadows and one motivated light source, desaturated cool palette with selective warm highlights, high contrast, visible film grain, subtle vintage lens softness and vignette, shallow depth of field, atmospheric haze or dust, one strong focal point with negative space for a slow zoom or pan, dramatic but believable composition, correct decade and location, authentic period clothing, vehicles and architecture, natural anatomy and realistic skin texture";
+const DS2D="2D animated documentary illustration in a dark graphic-novel storybook style: bold clean ink outlines, flat colour fills with subtle painterly texture and soft grain, a limited muted palette (deep teal, ochre, dusty red, charcoal) with one bright accent colour on the focal point, expressive simplified characters with readable emotion, strong silhouettes and high contrast, dramatic shadows drawn as solid shapes, layered composition (foreground, midground, background) with a clear focal point and uncluttered backgrounds that can be animated with slow zooms and parallax, era-appropriate costumes, architecture and objects, a hint of the period’s own art style (woodcut, engraving or newspaper-illustration linework) where it fits";
+const NEG2D="photorealistic, 3D render, CGI, kawaii or big-eye anime look, text, captions, watermark, logo, graphic gore, blood splatter, modern objects, anachronistic clothing or uniforms, off-model or inconsistent character design, cluttered background, extra fingers, distorted hands, deformed face";
+const CAMS2D=[["Wide establishing illustration of the location, layered depth, room for a slow pan","soft overcast palette, haze layers"],["Medium shot, character acting out the moment, clear readable pose and expression","low-key window light, long solid shadows"],["Close-up on a telling object or detail, simple clean background","single warm lamp, dark surroundings"],["Over-the-shoulder medium shot, simple layered background","dusk palette, cool shadows, warm highlights"],["High-angle map-like view of the scene or town, simplified shapes","pale morning tones, fog bands"],["Profile medium close-up, generous negative space","candle or lamp glow, strong contrast"],["Top-down view of period documents, photographs and objects on a desk, any text illegible, simple shapes","single overhead lamp, dust specks"],["Symbolic illustration (a clock, a long shadow, a locked door, a crowd silhouette) that stands for the idea","stylised contrast, one accent colour"]];
+const HOOK2D=[["Extreme close-up illustration of a telling detail (eyes, hands, an object or a document), bold outlines, strong contrast","single hard light as solid shadow shapes, one accent colour"],["Wide shot of a lone silhouetted figure against a glowing window or street, ominous negative space","near-black foreground shapes, cold glow, one warm accent"],["Low-angle dramatic shot, character half in shadow, exaggerated perspective","deep blue shadows, one warm highlight"],["Over-the-shoulder shot toward a threatening scene, tension in the pose","dim lamp light, drifting smoke shapes"],["Centred symmetrical shot of a looming building or empty street, strong leading lines","pre-dawn teal, thin fog layers, one lit window"]];
+const PRE={"2d":{style:DS2D,neg:NEG2D,cams:CAMS2D,hook:HOOK2D},photo:{style:DS,neg:NEG,cams:CAMS,hook:HOOK}};
+let S={p:{title:"",dur:"",max:5,era:"",loc:"",style:DS,script:""},chars:[],shots:[]};
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const IM={};/* shot images + portraits (dataURL), persisted in IndexedDB */
+const idb=new Promise(r=>{try{const q=indexedDB.open("of-studio",1);q.onupgradeneeded=()=>q.result.createObjectStore("i");q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
+async function iput(k,v){try{const d=await idb;if(!d)return;const t=d.transaction("i","readwrite").objectStore("i");v?t.put(v,k):t.delete(k)}catch(e){}}
+async function iall(){try{const d=await idb;if(!d)return;return await new Promise(r=>{const o={},c=d.transaction("i").objectStore("i").openCursor();c.onsuccess=()=>{const x=c.result;if(x){o[x.key]=x.value;x.continue()}else r(o)};c.onerror=()=>r({})})}catch(e){return{}}}
+function save(){try{localStorage.setItem("of-studio",JSON.stringify(S))}catch(e){}}
+function secs(v){v=String(v).trim();if(v.includes(":")){const a=v.split(":").map(Number);return a.length==2?a[0]*60+a[1]:a[0]*3600+a[1]*60+a[2]}return Number(v)}
+function mmss(t){t=Math.round(t);return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")}
+function calc(){const T=secs(S.p.dur),m=Number(S.p.max);const el=$("#calc");if(!(T>0)||!(m>0)){el.textContent="Enter a duration and a max seconds-per-image value.";return 0}const n=Math.ceil(T/m);el.innerHTML="Minimum shots: <b style='color:var(--ac)'>"+n+"</b> ("+T+"s ÷ "+m+"s, rounded up)";return n}
+function split(){
+ const w=S.p.script.trim().split(/\s+/).filter(Boolean),W=w.length,T=secs(S.p.dur),m=Number(S.p.max);
+ if(!W||!(T>0)||!(m>0))return null;
+ const N=Math.min(Math.ceil(T/m),W),spw=T/W,maxW=Math.floor(m/spw)||1,avg=W/N;
+ const strong=i=>/[.!?]["”’')\]]*$/.test(w[i-1]),weak=i=>/[,;:—–]["”’']*$/.test(w[i-1]);
+ const b=[0];
+ for(let k=1;k<N;k++){const prev=b[k-1],hard=Math.round(k*W/N);let best=hard,bd=1e9;
+  for(let i=Math.max(prev+1,Math.round(hard-.25*avg));i<=Math.min(W-1,Math.round(hard+.25*avg));i++){
+   if(i-prev>maxW||W-i>(N-k)*maxW)continue;const sc=strong(i)?0:weak(i)?avg*.1:avg;const d=Math.abs(i-hard)+sc;
+   if((strong(i)||weak(i))&&d<bd){bd=d;best=i}}
+  b.push(Math.max(prev+1,Math.min(best,W-(N-k))))}
+ b.push(W);
+ return b.slice(0,-1).map((s,k)=>({n:k+1,s:s*spw,e:b[k+1]*spw,text:w.slice(s,b[k+1]).join(" ")}));
+}
+function charsIn(t){return S.chars.filter(c=>c.name&&[c.name,...c.name.split(/\s+/).filter(x=>x.length>3)].some(n=>t.toLowerCase().includes(n.toLowerCase()))).map(c=>c.name)}
+function build(s){
+ const cd=s.chars.split(",").map(x=>x.trim()).filter(Boolean).map(n=>{const c=S.chars.find(c=>c.name.toLowerCase()==n.toLowerCase());return c&&c.desc?n+": "+c.desc:n}).join("; ");
+ return [S.p.style,s.vis,s.subj&&"Subject: "+s.subj,cd&&"Characters — "+cd,[s.loc,s.era].filter(Boolean).join(", "),s.wear,s.cam,s.light,"16:9 landscape frame, no text, no watermark, no logos"].filter(Boolean).join(". ")+"."}
+function cont(s,i){const out=[];s.chars.split(",").map(x=>x.trim()).filter(Boolean).forEach(n=>{for(let j=i-1;j>=0;j--)if(S.shots[j].chars.toLowerCase().includes(n.toLowerCase())){out.push(n+": identical face, hair, build and clothing to shot "+S.shots[j].n+" unless the timeline changes.");break}});return out.join(" ")}
+function fill(s,i,rot){const pr=PRE[S.p.preset]||PRE["2d"],A=s.s<30?pr.hook:pr.cams,c=A[(i+(rot||0))%A.length];s.cam=c[0];s.light=c[1];s.chars=charsIn(s.text).join(", ");s.subj=s.chars||"";s.vis="The viewer sees a scene that illustrates: “"+(s.text.length>150?s.text.slice(0,150)+"…":s.text)+"”";s.cont=cont(s,i);s.prompt=build(s)}
+function mk(r,i){const s={id:"s"+Date.now().toString(36)+i,n:r.n,s:r.s,e:r.e,text:r.text,vis:"",subj:"",chars:"",loc:S.p.loc,era:S.p.era,wear:"",cam:"",light:"",prompt:"",neg:(PRE[S.p.preset]||PRE["2d"]).neg,cont:"",conf:CF[1],st:ST[0]};S.shots.push(s);fill(s,i);return s}
+function opts(a,v,all){return (all?"<option value=''>"+all+"</option>":"")+a.map(x=>"<option"+(x==v?" selected":"")+">"+esc(x)+"</option>").join("")}
+function filt(){const q=$("#q").value.toLowerCase(),fs=$("#fs").value,fc=$("#fc").value;return S.shots.filter(s=>(!q||String(s.n)==q||[s.text,s.vis,s.loc,s.subj,s.chars].join(" ").toLowerCase().includes(q))&&(!fs||(fs=="copied"?s.copied:!s.copied))&&(!fc||s.chars.toLowerCase().includes(fc.toLowerCase())))}
+function master(){const p=S.p;return "You are my image-generation assistant for a faceless historical true-crime documentary YouTube channel, “Oblitus Fabula”"+(p.title?" (current project: "+p.title+")":"")+".\n\nI will send one shot at a time. For each shot, generate exactly one image, then wait for my next message.\n\nRules for every image:\n- 16:9 landscape, 1920x1080, with a clear focal point and room at the edges so the image can take a slow zoom or pan.\n- Style: "+p.style+".\n"+((p.era||p.loc)?"- Setting for this project: "+[p.era,p.loc].filter(Boolean).join(", ")+".\n":"")+""+(p.preset=="photo"?"- I will attach archival photographs of the main character(s). The archival photo is the only authority for that person’s face: match their features, age, hair, facial hair and build exactly, adapt only clothing, pose and lighting to the shot, and never beautify or modernise them. Where no photo is attached, follow the written CHARACTERS and CONTINUITY details and keep the person identical in every shot.\n":"- I will attach archival photographs of the main character(s). Use each photo to design that person as an illustrated 2D character: keep a recognisable likeness (face shape, hairline, facial hair, age, build) simplified into the art style, never a photographic face. Keep that character design identical in every shot (same face, hair, clothing colours), changing only pose, expression and, when the story needs it, age or outfit. Where no photo is attached, follow the written CHARACTERS and CONTINUITY details.\n- Compose every image in clear layers (foreground, midground, background) with simple backgrounds so I can animate it with slow zooms and parallax.\n- Show violence only through shadows, silhouettes and symbols, never graphic gore.\n")+"- Shots marked HOOK come from the first 30 seconds: make them the most arresting frames, with tight dramatic framing, strong contrast and instant visual intrigue.\n- No visible text, captions, watermarks or logos. No modern objects or anachronistic clothing, vehicles or uniforms in historical scenes. No excessive gore. Avoid everything on the AVOID line.\n- These are illustrative reconstructions, not authentic photographs of real people.\n- If a detail is unclear, choose the most historically plausible option instead of asking me.\n- Reply with the image only, no commentary.\n\nReply “Ready” if you understand, then wait for Shot 1."}
+function shotText(s){const cl=s.chars.split(",").map(x=>x.trim()).filter(Boolean).map(n=>{const c=S.chars.find(c=>c.name.toLowerCase()==n.toLowerCase());return "- "+n+(c&&c.desc?": "+c.desc:"")+" (use the attached archival photo as the likeness reference)"}).join("\n");
+ return ["Shot "+s.n+" · "+mmss(s.s)+"–"+mmss(s.e),"Narration: "+s.text,s.s<30&&"Role: HOOK shot (first 30 seconds). Make this frame arresting.",s.vis&&"Scene: "+s.vis,s.subj&&"Main subject: "+s.subj,cl&&"Characters (keep identical across shots):\n"+cl,(s.loc||s.era)&&"Location and period: "+[s.loc,s.era].filter(Boolean).join(", "),s.wear&&"Wardrobe, props, environment: "+s.wear,s.cam&&"Camera and composition: "+s.cam,s.light&&"Lighting and atmosphere: "+s.light,s.cont&&"Continuity: "+s.cont,"Historical confidence: "+s.conf,"IMAGE PROMPT: "+s.prompt,"AVOID: "+s.neg,"Format: 16:9 landscape, 1920x1080, one image only."].filter(Boolean).join("\n")}
+function cp(t){try{const x=document.createElement("textarea");x.value=t;x.setAttribute("readonly","");x.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0";document.body.appendChild(x);x.focus();x.select();x.setSelectionRange(0,t.length);document.execCommand("copy");x.remove()}catch(e){}try{navigator.clipboard.writeText(t).catch(()=>{})}catch(e){}return Promise.resolve(true)}
+function stats(){const n=S.shots.length,c=S.shots.filter(s=>s.copied).length;$("#stat").innerHTML=[["Shots",n],["Copied",c],["Left to copy",n-c]].map(a=>"<div><b>"+a[1]+"</b><small>"+a[0]+"</small></div>").join("")}
+function cards(){stats();const L=filt();$("#cards").innerHTML=L.length?L.map(s=>{const f=(k,l,ta)=>"<label>"+l+"</label>"+(ta?"<textarea data-k='"+k+"' rows='2'>"+esc(s[k])+"</textarea>":"<input data-k='"+k+"' value=\""+esc(s[k])+"\">");
+ return "<div class='card"+(s.copied?" done":"")+"' data-id='"+s.id+"'><div class='cb'><h3>Shot "+s.n+"</h3><button class='p' data-a='cp'>Copy</button><div class='msg'>"+(s.copied?"Shot "+s.n+" copied":"")+"</div><details ontoggle=\"this.closest('.card').style.gridColumn=this.open?'1/-1':''\"><summary>Edit</summary><div class='note'>"+mmss(s.s)+"–"+mmss(s.e)+"</div><p class='nar'>“"+esc(s.text)+"”</p>"+f("vis","Visual description",1)+f("chars","Characters (comma-separated)")+f("subj","Main subject")+f("loc","Location")+f("era","Time period")+f("wear","Wardrobe, props, environment",1)+f("cam","Camera",1)+f("light","Lighting",1)+f("cont","Continuity",1)+"<label>Historical confidence</label><select data-k='conf'>"+opts(CF,s.conf)+"</select><label>Image prompt</label><textarea data-k='prompt' rows='6'>"+esc(s.prompt)+"</textarea><label>Negative prompt</label><textarea data-k='neg' rows='3'>"+esc(s.neg)+"</textarea><div class='acts'><button data-a='regen'>Rebuild prompt</button><button data-a='var'>New camera angle</button></div></details></div></div>"}).join(""):"<div class='note'>"+(S.shots.length?"No shots match the filters.":"Paste a script, enter the duration, and press Build storyboard.")+"</div>";
+ const fv=$("#fs").value;$("#fs").innerHTML="<option value=''>All shots</option><option value='copied'>Copied</option><option value='todo'>Not copied yet</option>";$("#fs").value=fv;const sel=$("#fc").value;$("#fc").innerHTML=opts(S.chars.map(c=>c.name).filter(Boolean),sel,"All characters")}
+function chars(){$("#chars").innerHTML=S.chars.map((c,i)=>"<div class='chr' data-i='"+i+"'><div class='av' data-a='cimg' style=\"cursor:pointer;"+(IM['c'+c.id]?"background-image:url('"+IM['c'+c.id]+"')":"")+"\" title='Upload reference portrait'></div><div style='flex:1'><input data-c='name' placeholder='Name' value=\""+esc(c.name)+"\"><textarea data-c='desc' rows='3' placeholder='Age, face, hair, facial hair, build, clothing…'>"+esc(c.desc)+"</textarea><button data-a='cdel'>Remove</button></div></div>").join("")||"<div class='note'>No characters yet.</div>"}
+function pick(cb){const f=document.createElement("input");f.type="file";f.accept="image/*";f.onchange=()=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",.82))};im.src=r.result};if(f.files[0])r.readAsDataURL(f.files[0])};f.click()}
+function show(t,n,fn){$("#mt").value=t;$("#mn").textContent=n;$("#modal").style.display="flex";$("#mdl").onclick=async()=>{try{const d=await window.claude.use("downloads");if(!d)throw 0;await d.save({filename:fn,data:t});$("#mn").textContent="Saved."}catch(e){$("#mn").textContent="Download did not go through; use Copy instead."}}}
+function fb(t){const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();try{document.execCommand("copy")}catch(e){}x.remove()}
+function exCSV(){const H=["shot","start","end","narration","visual","characters","subject","location","period","wardrobe_props","camera","lighting","prompt","negative_prompt","continuity","confidence","status"];const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';return [H.join(",")].concat(S.shots.map(s=>[s.n,mmss(s.s),mmss(s.e),s.text,s.vis,s.chars,s.subj,s.loc,s.era,s.wear,s.cam,s.light,s.prompt,s.neg,s.cont,s.conf,s.st].map(q).join(","))).join("\n")}
+function exDoc(){const p=S.p;return "# "+(p.title||"Untitled")+" — Image production document\nEra: "+p.era+" | Location: "+p.loc+" | Length: "+p.dur+" | Max per image: "+p.max+"s | Shots: "+S.shots.length+"\n\nNote: images are illustrative reconstructions, not authentic photographs of historical people, unless marked as archival.\n\n## Characters\n"+S.chars.map(c=>"- "+c.name+": "+c.desc).join("\n")+"\n\n"+S.shots.map(s=>"## Shot "+s.n+" ["+mmss(s.s)+"–"+mmss(s.e)+"] — "+s.st+"\nNarration: "+s.text+"\nVisual: "+s.vis+"\nCharacters: "+s.chars+" | Location: "+s.loc+", "+s.era+"\nWardrobe/props: "+s.wear+"\nCamera: "+s.cam+" | Lighting: "+s.light+"\nContinuity: "+s.cont+"\nConfidence: "+s.conf+"\nPROMPT: "+s.prompt+"\nNEGATIVE: "+s.neg+"\n").join("\n")}
+const SYS="You are a visual researcher for a historical true-crime documentary channel. For each narration shot, return a historically grounded shot plan. Rules: correct era and place; never invent specific facts the narration does not imply; conf is symbolic illustration or reasonable reconstruction unless the shot shows a documented, verifiable scene (then verified fact); no gore; no text in images; keep recurring people identical using the exact name strings from the character library; vary framing between consecutive shots. Respond with ONLY JSON: {\"characters\":[{\"name\":\"\",\"desc\":\"\"}],\"shots\":[{\"n\":0,\"vis\":\"what the viewer sees\",\"subj\":\"main subject\",\"chars\":\"comma-separated names\",\"loc\":\"\",\"era\":\"\",\"wear\":\"wardrobe, props, environment\",\"cam\":\"framing, angle, lens\",\"light\":\"lighting and atmosphere\",\"conf\":\"verified fact|reasonable reconstruction|symbolic illustration\"}]}. characters lists only NEW recurring people, each with a fixed physical description.\n\nINPUT:\n";
+async function plan(){if(!S.shots.length){alert("Build the storyboard first.");return}const sm=window.claude?await window.claude.use("sample"):null;if(!sm){alert("Claude planning is not available in this view.");return}if(!confirm("Claude will rewrite the visual fields and prompts of every shot, replacing manual edits. Continue?"))return;$("#plan").disabled=true;const sh=S.shots;try{for(let i=0;i<sh.length;i+=15){const ch=sh.slice(i,i+15);$("#pmsg").textContent="Claude is planning shots "+ch[0].n+"–"+ch[ch.length-1].n+" of "+sh.length+"…";$("#pbar").style.width=(100*i/sh.length)+"%";
+const j=await sm.json(SYS+JSON.stringify({title:S.p.title,era:S.p.era,loc:S.p.loc,library:S.chars.map(c=>({name:c.name,desc:c.desc})),previous:sh.slice(Math.max(0,i-3),i).map(s=>({n:s.n,text:s.text,subj:s.subj})),shots:ch.map(s=>({n:s.n,text:s.text}))}),{cache:false});
+(j.characters||[]).forEach(c=>{if(c.name&&!S.chars.some(x=>x.name.toLowerCase()==c.name.toLowerCase()))S.chars.push({id:"c"+Date.now().toString(36)+S.chars.length,name:c.name,desc:c.desc||""})});
+(j.shots||[]).forEach(r=>{const s=sh.find(x=>x.n==r.n);if(!s)return;for(const k of ["vis","subj","chars","loc","era","wear","cam","light"])if(typeof r[k]=="string"&&r[k])s[k]=r[k];if(CF.includes(r.conf))s.conf=r.conf})}
+sh.forEach((s,i)=>{s.cont=cont(s,i);s.prompt=build(s)});$("#pmsg").textContent="Planning complete. Review the cards, then generate the images."}catch(e){$("#pmsg").textContent="Planning stopped: "+(e.message||e.code||"error")+". Shots already planned were kept."}$("#pbar").style.width="100%";$("#plan").disabled=false;chars();save();cards()}
+function rd(f){return new Promise(r=>{const x=new FileReader();x.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1280/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);r(c.toDataURL("image/jpeg",.82))};im.onerror=()=>r(null);im.src=x.result};x.onerror=()=>r(null);x.readAsDataURL(f)})}
+function bulk(){const f=document.createElement("input");f.type="file";f.accept="image/*";f.multiple=true;f.onchange=async()=>{let ok=0;const bad=[];for(const file of f.files){const m=file.name.match(/(\d+)/),s=m&&S.shots.find(x=>x.n==Number(m[1])),d=s&&await rd(file);if(d){IM[s.id]=d;iput(s.id,d);if(s.st!="approved")s.st="generated";ok++}else bad.push(file.name)}$("#pmsg").textContent="Matched "+ok+" of "+f.files.length+" files by shot number."+(bad.length?" Not matched: "+bad.join(", "):"");save();cards()};f.click()}
+document.addEventListener("input",e=>{const t=e.target;if(t.dataset.p){S.p[t.dataset.p]=t.value;if(["dur","max"].includes(t.dataset.p))calc();if(t.dataset.p=="preset"){S.p.style=PRE[t.value].style;$("[data-p=style]").value=S.p.style}if(!S.p.master&&t.dataset.p!="master")$("[data-p=master]").value=master()}
+ else if(t.dataset.k){const s=S.shots.find(x=>x.id==t.closest(".card").dataset.id);s[t.dataset.k]=t.value;s.copied=false;const cd=t.closest(".card");cd.classList.remove("done");cd.querySelector(".msg").textContent=""}
+ else if(t.dataset.c){S.chars[t.closest(".chr").dataset.i][t.dataset.c]=t.value}
+ if(t.id=="q")cards();save()});
+document.addEventListener("change",e=>{if(e.target.id=="fs"||e.target.id=="fc")cards();if(e.target.dataset.k=="conf")save()});
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-a],button");if(!b)return;const a=b.dataset.a,id=b.id;
+ if(id=="gen"){if(S.shots.length&&!confirm("Replace the current shot list?"))return;const r=split();if(!r){alert("Please enter a script, a duration (MM:SS) and a max seconds-per-image value.");return}S.shots=[];r.forEach(mk);cards()}
+ else if(id=="demo"){Object.assign(S.p,{title:"Sample",dur:"00:30",max:5,era:"1900s",loc:"Johannesburg, South Africa",script:"In 1902, the city of gold was a place of dust, ambition and quiet fear. Mine shafts bored deep beneath its streets. Above them, new fortunes were being counted. Below them, thousands of workers carried the weight of it all. Among them was a man named Nongoloza, whose name would soon travel through every compound in the district. Nobody yet knew what he was building in the dark. The police thought they were dealing with thieves. They were wrong, and the truth was far stranger."});S.chars=[{id:"n1",name:"Nongoloza",desc:"Black South African man in his 30s, lean, stern gaze, short cropped hair, worn dark wool jacket and rough cotton shirt"}];form();chars()}
+ else if(id=="addc"){S.chars.push({id:"c"+Date.now().toString(36),name:"",desc:""});chars()}
+ else if(id=="plan")plan();else if(id=="bup")bulk();
+ else if(id=="allp"){{const ok=await cp(S.shots.map(shotText).join("\n\n———\n\n"));$("#pmsg").textContent=ok?"Copied all "+S.shots.length+" shots.":"Could not copy."}}
+ else if(id=="mcp"){const ok=await cp($("[data-p=master]").value);$("#mm").textContent=ok?"Briefing copied":"Could not copy; select the text and copy it manually."}
+ else if(id=="mrs"){S.p.master="";$("[data-p=master]").value=master();save();$("#mm").textContent="Briefing reset."}
+ else if(id=="csv")show(exCSV(),"CSV of all shots","oblitus-fabula-shots.csv");
+ else if(id=="doc")show(exDoc(),"Full production document (Markdown)","oblitus-fabula-production.md");
+ else if(id=="mx")$("#modal").style.display="none";else if(id=="mcopy"){cp($("#mt").value);$("#mn").textContent="Copied (if your browser allowed it)."}
+ else if(a=="cdel"){const c=S.chars.splice(b.closest(".chr").dataset.i,1)[0];iput("c"+c.id,null);chars();cards()}
+ else if(a=="cimg"){const c=S.chars[b.closest(".chr").dataset.i];pick(d=>{IM["c"+c.id]=d;iput("c"+c.id,d);chars()})}
+ else if(a){const s=S.shots.find(x=>x.id==b.closest(".card").dataset.id),i=S.shots.indexOf(s);if(a=="regen"||a=="var")s.copied=false;
+  if(a=="regen"){s.cont=cont(s,i);s.prompt=build(s)}
+  else if(a=="var"){s.rot=(s.rot||0)+1;const pr=PRE[S.p.preset]||PRE["2d"],A=s.s<30?pr.hook:pr.cams,c=A[(i+s.rot)%A.length];s.cam=c[0];s.light=c[1];s.prompt=build(s)}
+  else if(a=="open"){const w=window.open((S.p.gurl||"").replace("{prompt}",encodeURIComponent(s.prompt)),"_blank");if(w){try{w.opener=null}catch(e){}}else{cp(s.prompt);$("#pmsg").textContent="The browser blocked the new tab, so shot "+s.n+"’s prompt was copied instead."}return}
+  else if(a=="ok")s.st="approved";else if(a=="rev")s.st="needs revision";
+  else if(a=="cp"){const ok=await cp(shotText(s));const m=b.parentElement.querySelector(".msg");if(ok){s.copied=true;b.closest(".card").classList.add("done")}m.textContent=ok?"Shot "+s.n+" copied":"Copy blocked: text is selected in the window, press Ctrl+C.";save();stats();return}
+  else if(a=="rm"){delete IM[s.id];iput(s.id,null);if(s.st!="approved")s.st=ST[0]}
+  else if(a=="up"){pick(d=>{IM[s.id]=d;iput(s.id,d);if(s.st==ST[0]||s.st=="needs revision")s.st="generated";save();cards()});return}
+  save();cards()}
+ save()});
+function form(){document.querySelectorAll("[data-p]").forEach(i=>i.value=S.p[i.dataset.p]??"");$("[data-p=master]").value=S.p.master||master();calc()}
+(async()=>{try{const x=JSON.parse(localStorage.getItem("of-studio")||"null");if(x&&x.p)S=x}catch(e){}
+ S.p.max=S.p.max||5;if(!S.p.style||S.p.style.startsWith("Photorealistic cinematic historical documentary still, correct decade"))S.p.style=DS;if(S.p.master&&S.p.master.includes("correct decade and location,"))S.p.master="";if(!S.p.preset){S.p.preset="2d";S.p.style=DS2D;S.p.master=""}S.p.gurl=S.p.gurl||"https://image.pollinations.ai/prompt/{prompt}?width=1280&height=720&nologo=true";Object.assign(IM,await iall()||{});form();chars();cards()})();
+</script></body></html>
